@@ -9,6 +9,10 @@ html {
   background-color: #e6e6e6; /* Cor de fundo mais suave do que o branco puro */
 }
 
+h1 {
+  font-size: 2rem;
+}
+
 .app-container {
   display: flex;
   height: 100vh; /* Impede a rolagem vertical desnecessária */

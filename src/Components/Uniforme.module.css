@@ -4,6 +4,7 @@
   align-items: center;
   width: 650px;
   padding: 20px; /* Evita que a box toque as bordas da tela */
+  margin-top: 200px;
 }
 
 .boxUniforme {

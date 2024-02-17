@@ -1,4 +1,7 @@
-// Novos uniformes iniciais considerando tamanhos e gêneros
+// EstoqueDB.js
+
+const tamanhos = ['P', 'M', 'G', 'GG', 'GGG'];
+const generos = ['masculino', 'feminino', 'unissex'];
 const uniformes = [
   'Musculação',
   'Professor de natação (regata)',
@@ -15,37 +18,7 @@ const uniformes = [
   'Black fitness bermuda',
 ];
 
-// Gerar uniformes iniciais com tamanhos e gêneros
-const tamanhos = ['P', 'M', 'G', 'GG', 'GGG'];
-const generos = ['masculino', 'feminino'];
-const uniformesIniciais = [];
-
-uniformes.forEach((nomeUniforme) => {
-  if (
-    nomeUniforme === 'Bermuda' ||
-    nomeUniforme === 'Legging' ||
-    nomeUniforme === 'Black fitness bermuda'
-  ) {
-    tamanhos.forEach((tamanho) => {
-      uniformesIniciais.push({
-        nomeUniforme,
-        tamanho,
-        quantidade: 0, // Não distingue por gênero
-      });
-    });
-  } else {
-    tamanhos.forEach((tamanho) => {
-      generos.forEach((sexo) => {
-        uniformesIniciais.push({
-          nomeUniforme,
-          sexo,
-          tamanho,
-          quantidade: 0,
-        });
-      });
-    });
-  }
-});
+const uniformesUnissex = ['Bermuda', 'Legging', 'Black fitness bermuda'];
 
 const openDatabase = () => {
   return new Promise((resolve, reject) => {
@@ -54,8 +27,7 @@ const openDatabase = () => {
       return;
     }
 
-    // Incrementar a versão do banco de dados para acionar o onupgradeneeded
-    const request = window.indexedDB.open('EstoqueDB', 2); // Atenção ao incremento da versão
+    const request = window.indexedDB.open('EstoqueDB', 5); // Incremento da versão para forçar onupgradeneeded
 
     request.onerror = (event) => {
       reject('Erro ao abrir o banco de dados: ' + event.target.errorCode);
@@ -63,25 +35,67 @@ const openDatabase = () => {
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      let objectStore;
+      let estoqueStore;
 
       if (!db.objectStoreNames.contains('estoque')) {
-        objectStore = db.createObjectStore('estoque', {
+        estoqueStore = db.createObjectStore('estoque', {
           keyPath: 'id',
           autoIncrement: true,
         });
-        objectStore.createIndex('nomeUniforme', 'nomeUniforme', {
+        estoqueStore.createIndex('nomeUniforme', 'nomeUniforme', {
           unique: false,
         });
-        objectStore.createIndex('sexo', 'sexo', { unique: false });
-        objectStore.createIndex('tamanho', 'tamanho', { unique: false });
-        objectStore.createIndex('quantidade', 'quantidade', { unique: false });
-      } else {
-        objectStore = event.currentTarget.transaction.objectStore('estoque');
+        estoqueStore.createIndex('sexo', 'sexo', { unique: false });
+        estoqueStore.createIndex('tamanho', 'tamanho', { unique: false });
+        estoqueStore.createIndex('quantidade', 'quantidade', { unique: false });
       }
 
-      // Adiciona os uniformes iniciais ao object store
-      uniformesIniciais.forEach((uniforme) => objectStore.add(uniforme));
+      if (!db.objectStoreNames.contains('movimentacoes')) {
+        const movimentacoesStore = db.createObjectStore('movimentacoes', {
+          keyPath: 'id',
+          autoIncrement: true,
+        });
+        movimentacoesStore.createIndex('nomeUniforme', 'nomeUniforme', {
+          unique: false,
+        });
+        movimentacoesStore.createIndex('sexo', 'sexo', { unique: false });
+        movimentacoesStore.createIndex('tamanho', 'tamanho', { unique: false });
+        movimentacoesStore.createIndex('quantidade', 'quantidade', {
+          unique: false,
+        });
+        movimentacoesStore.createIndex('dataHora', 'dataHora', {
+          unique: false,
+        });
+        movimentacoesStore.createIndex('operacao', 'operacao', {
+          unique: false,
+        });
+      }
+
+      // Pre-fill estoque with initial data
+      if (estoqueStore) {
+        uniformes.forEach((nomeUniforme) => {
+          tamanhos.forEach((tamanho) => {
+            const isUnissex = uniformesUnissex.includes(nomeUniforme);
+            if (isUnissex) {
+              estoqueStore.add({
+                nomeUniforme,
+                sexo: 'unissex',
+                tamanho,
+                quantidade: 0,
+              });
+            } else {
+              generos.slice(0, -1).forEach((sexo) => {
+                estoqueStore.add({
+                  nomeUniforme,
+                  sexo,
+                  tamanho,
+                  quantidade: 0,
+                });
+              });
+            }
+          });
+        });
+      }
     };
 
     request.onsuccess = (event) => {
@@ -98,15 +112,17 @@ const atualizarEstoque = async (
   operacao
 ) => {
   const db = await openDatabase();
-  const transaction = db.transaction(['estoque'], 'readwrite');
-  const objectStore = transaction.objectStore('estoque');
+  const transaction = db.transaction(['estoque', 'movimentacoes'], 'readwrite');
+  const estoqueStore = transaction.objectStore('estoque');
+  const movimentacoesStore = transaction.objectStore('movimentacoes');
+
+  const dataHora = new Date().toISOString();
 
   return new Promise((resolve, reject) => {
-    const index = objectStore.index('nomeUniforme');
+    const index = estoqueStore.index('nomeUniforme');
     index.openCursor().onsuccess = async (event) => {
       const cursor = event.target.result;
       if (cursor) {
-        // Converte os nomes dos uniformes para minúsculas antes de comparar
         if (
           cursor.value.nomeUniforme.toLowerCase() ===
             nomeUniforme.toLowerCase() &&
@@ -118,8 +134,20 @@ const atualizarEstoque = async (
             operacao === 'adicionar'
               ? updateData.quantidade + quantidade
               : Math.max(0, updateData.quantidade - quantidade);
+
           const requestUpdate = cursor.update(updateData);
-          requestUpdate.onsuccess = () => resolve();
+          requestUpdate.onsuccess = () => {
+            const movimentacao = {
+              nomeUniforme,
+              sexo,
+              tamanho,
+              quantidade,
+              operacao,
+              dataHora,
+            };
+            movimentacoesStore.add(movimentacao);
+            resolve();
+          };
           requestUpdate.onerror = (error) =>
             reject('Erro ao atualizar o estoque:', error);
           return;
@@ -128,13 +156,23 @@ const atualizarEstoque = async (
       } else {
         if (operacao === 'adicionar') {
           const novoUniforme = {
-            nomeUniforme: nomeUniforme, // Aqui você poderia também optar por armazenar sempre em minúsculas ou maiúsculas se desejar uniformidade
+            nomeUniforme,
             sexo,
             tamanho,
             quantidade: quantidade >= 0 ? quantidade : 0,
           };
-          objectStore.add(novoUniforme);
-          resolve();
+          estoqueStore.add(novoUniforme).onsuccess = () => {
+            const movimentacao = {
+              nomeUniforme,
+              sexo,
+              tamanho,
+              quantidade,
+              operacao,
+              dataHora,
+            };
+            movimentacoesStore.add(movimentacao);
+            resolve();
+          };
         } else {
           reject('Não é possível retirar do estoque. Item não encontrado.');
         }
@@ -191,4 +229,30 @@ const getTodosUniformes = async () => {
   });
 };
 
-export { atualizarEstoque, getQuantidadesEstoque, getTodosUniformes };
+const buscarMovimentacoes = async () => {
+  const db = await openDatabase();
+  const transaction = db.transaction(['movimentacoes'], 'readonly');
+  const movimentacoesStore = transaction.objectStore('movimentacoes');
+  const index = movimentacoesStore.index('dataHora'); // Presumindo que você queira ordenar por dataHora
+
+  return new Promise((resolve) => {
+    const resultados = [];
+    index.openCursor(null, 'prev').onsuccess = (event) => {
+      // 'prev' para mais recentes primeiro
+      const cursor = event.target.result;
+      if (cursor) {
+        resultados.push(cursor.value);
+        cursor.continue();
+      } else {
+        resolve(resultados);
+      }
+    };
+  });
+};
+
+export {
+  atualizarEstoque,
+  getQuantidadesEstoque,
+  getTodosUniformes,
+  buscarMovimentacoes,
+};

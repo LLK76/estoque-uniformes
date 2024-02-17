@@ -7,6 +7,7 @@ import Uniforme from './Components/Uniforme';
 import Estoque from './Components/Estoque';
 import SideNav from './Components/SideNav';
 import './App.css'; // Certifique-se de que este import está correto
+import Movimentacao from './Components/Movimentacao';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path='uniforme/:nomeUniforme' element={<Uniforme />} />
             <Route path='entregaUniforme/*' element={<EntregaUniforme />} />
             <Route path='estoque' element={<Estoque />} />
+            <Route path='movimentacoes' element={<Movimentacao />} />
           </Routes>
         </div>
       </div>
