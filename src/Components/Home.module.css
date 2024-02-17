@@ -1,0 +1,30 @@
+.dashboard {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 650px;
+  box-sizing: border-box;
+  margin-top: 25%;
+  max-height: 650px;
+  overflow-y: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.dashboard p {
+  margin-bottom: 20px;
+}
+
+.tituloExpandivel {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.tituloExpandivel:hover {
+  color: #007bff; /* Altere para a cor que você deseja no hover */
+}

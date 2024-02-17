@@ -1,0 +1,122 @@
+/* Estilo Geral da Página */
+* {
+  margin: 0;
+}
+body,
+html {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #e6e6e6; /* Cor de fundo mais suave do que o branco puro */
+}
+
+.app-container {
+  display: flex;
+  height: 100vh; /* Impede a rolagem vertical desnecessária */
+  overflow: hidden; /* Evita rolagem externa ao contêiner */
+}
+
+.routes-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-left: 20px; /* Ajuste conforme necessário para proximidade ao menu lateral */
+  margin-right: 20px; /* Adiciona margem à direita para evitar que o conteúdo toque a borda da tela */
+  max-width: calc(
+    100% - 290px
+  ); /* Ajuste baseado na largura do SideNav e nas margens desejadas */
+  display: flex;
+  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  align-items: flex-start; /* Alinha itens ao topo, ajuste conforme necessário */
+}
+
+/* Títulos */
+h1,
+h2 {
+  color: #333; /* Cor de texto escuro para contraste */
+  text-align: center;
+}
+
+/* Estilo das seções de números */
+.numeros {
+  display: flex;
+  gap: 50px;
+  margin-left: 35%;
+  border-bottom: 1px solid #ddd; /* Bordas mais suaves */
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.numeros h2,
+.numeros p {
+  color: #555; /* Texto em cinza escuro para suavidade */
+}
+
+/* Estilo dos botões */
+.buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.button {
+  background-color: #4a90e2; /* Azul mais suave */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+}
+
+.button:hover {
+  background-color: #417cb8; /* Azul mais escuro para hover */
+}
+
+/* Estilos adicionais para a tabela de uniformes */
+.table-container {
+  width: 100%; /* Faz com que o container da tabela ocupe toda a largura do dashboard */
+  overflow-y: auto; /* Adiciona rolagem vertical se necessário */
+  max-height: 300px; /* Ajuste conforme necessário para controlar a altura da tabela */
+  margin-top: 20px; /* Espaço acima da tabela */
+  border-radius: 8px; /* Arredondamento das bordas */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave para a tabela */
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%; /* A tabela ocupa toda a largura do seu container */
+  border-collapse: collapse; /* Remove o espaçamento entre as células */
+}
+
+.tbody-tabela {
+  display: block; /* Transforma tbody em um bloco para permitir rolagem */
+  max-height: 200px; /* Altura máxima antes de começar a rolar */
+  overflow-y: auto; /* Habilita rolagem vertical */
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.opcao:hover {
+  background: #4a90e2;
+}
+
+.estoque {
+  display: block;
+  max-height: 300px;
+  overflow-y: auto;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+th,
+td {
+  text-align: left; /* Alinha o texto à esquerda */
+  padding: 8px; /* Espaçamento interno para células da tabela */
+}
+
+th {
+  background-color: #f5f5f5; /* Cor de fundo para o cabeçalho da tabela */
+  color: #333; /* Cor do texto */
+}
+
+tr:nth-child(even) {
+  background-color: #fafafa; /* Cor de fundo para linhas alternadas */
+}

@@ -1,0 +1,76 @@
+.containerUniforme {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 650px;
+  padding: 20px; /* Evita que a box toque as bordas da tela */
+}
+
+.boxUniforme {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 15%;
+  max-width: 650px; /* Limita a largura máxima para telas grandes */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza o conteúdo verticalmente dentro da box */
+}
+
+.boxUniforme h1 {
+  color: #333;
+  margin-bottom: 20px; /* Espaçamento abaixo do título */
+}
+
+.boxUniforme form {
+  width: 100%; /* Faz com que o formulário ocupe toda a largura da box */
+}
+
+.boxUniforme h2 {
+  width: 100%; /* Garante que os subtítulos ocupem toda a largura */
+  text-align: center; /* Centraliza os títulos de gênero */
+  margin: 20px 0; /* Espaçamento acima e abaixo dos títulos de gênero */
+}
+
+.boxUniforme div {
+  display: flex;
+  justify-content: space-around; /* Distribui os campos de entrada uniformemente */
+  flex-wrap: wrap; /* Permite que os itens se ajustem em linhas adicionais conforme necessário */
+  margin-bottom: 15px; /* Espaçamento entre as linhas de itens */
+}
+
+.boxUniforme label {
+  margin-right: 10px; /* Espaçamento entre o rótulo e o campo de entrada */
+}
+
+.boxUniforme input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 60px; /* Fixa a largura dos campos de entrada */
+}
+
+@media (max-width: 768px) {
+  .containerUniforme {
+    padding: 10px; /* Reduz o padding para dar mais espaço */
+  }
+
+  .boxUniforme {
+    width: 100%; /* Ocupa toda a largura da tela */
+    max-width: none; /* Remove a restrição de largura máxima */
+    padding: 10px; /* Ajusta o padding para melhor acomodar em telas menores */
+  }
+
+  .boxUniforme form,
+  .boxUniforme h2,
+  .boxUniforme div {
+    width: 100%; /* Garante que os elementos internos ocupem toda a largura */
+  }
+
+  .boxUniforme input {
+    width: auto; /* Permite que o input se ajuste dentro do espaço disponível */
+    margin: 0 5px; /* Ajusta as margens para evitar sobreposição */
+  }
+}

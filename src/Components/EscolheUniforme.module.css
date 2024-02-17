@@ -1,0 +1,74 @@
+.containerEU {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 650px;
+  margin-top: 10%;
+}
+
+.containerEU h1 {
+  margin-bottom: 20px; /* Ajuste conforme necessário para espaçamento */
+}
+
+.box {
+  background-color: #ffffff; /* Mantém o fundo branco, mas você pode optar por um cinza muito claro (#f5f5f5) para suavizar */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Estilo para os botões de seleção de uniforme */
+.uniformes {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(100px, 1fr)
+  ); /* Ajuste na largura mínima */
+  gap: 20px;
+  width: 80%;
+  margin-left: 10%;
+  max-width: 600px;
+}
+
+.uniformes button,
+.uniformeLink {
+  /* Unifica estilos para botões e links */
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px; /* Reduz o padding para diminuir o tamanho total */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  height: 100px; /* Mantém a altura para quadrados */
+  width: 100px; /* Ajuste para manter os itens quadrados */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 12px; /* Pode ser ajustado para melhor acomodar o texto */
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.uniformes button:hover,
+.uniformeLink:hover {
+  background-color: #417cb8;
+}
+
+@media (max-width: 768px) {
+  .containerEU {
+    width: 100%; /* Ocupa toda a largura da tela */
+    height: auto; /* Altura automática para acomodar o conteúdo */
+    margin: 0;
+  }
+
+  .uniformes {
+    width: 100%; /* Ocupa toda a largura da tela */
+    margin-left: 0;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+}

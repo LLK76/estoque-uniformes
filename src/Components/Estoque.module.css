@@ -1,0 +1,12 @@
+.container {
+  margin-top: 25%;
+  width: 650px;
+}
+
+.estoque {
+  display: block;
+  max-height: 450px;
+  overflow-y: auto;
+  width: 100%;
+  margin-bottom: 25px;
+}
